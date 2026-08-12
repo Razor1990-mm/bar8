@@ -4,14 +4,24 @@ import { createServerClient } from "@supabase/ssr";
 /** Request-scoped server client — runs RLS as the signed-in user.
  *  Use this for nearly everything. See .claude/rules/security.md. */
 export async function createClient() {
-  const cookieStore = await cookies();
+  // generateStaticParams and other build-time contexts can't read cookies
+  // (Next.js throws). Fall back to a cookie-less (anon-role) client there —
+  // RLS still applies, and every accessor that runs at build time only
+  // reads published/public rows anyway.
+  let cookieStore: Awaited<ReturnType<typeof cookies>> | null = null;
+  try {
+    cookieStore = await cookies();
+  } catch {
+    cookieStore = null;
+  }
   return createServerClient(
     requiredEnv("NEXT_PUBLIC_SUPABASE_URL"),
     requiredEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
     {
       cookies: {
-        getAll: () => cookieStore.getAll(),
+        getAll: () => cookieStore?.getAll() ?? [],
         setAll: (all) => {
+          if (!cookieStore) return;
           try {
             all.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options),

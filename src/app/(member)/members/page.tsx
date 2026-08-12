@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { MemberCard } from "@/components/MemberCard";
-import { getMembers } from "@/lib/fixtures";
+import { getMembers } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Members" };
 

@@ -5,7 +5,7 @@ import { PublicNav } from "@/components/PublicNav";
 import { ClubImage } from "@/components/ClubImage";
 import { Stat } from "@/components/Stat";
 import { SectionHeader } from "@/components/SectionHeader";
-import { getStory, getStorySlugs } from "@/lib/fixtures";
+import { getStory, getStorySlugs } from "@/lib/data";
 
 export async function generateStaticParams() {
   const slugs = await getStorySlugs();

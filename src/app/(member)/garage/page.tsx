@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ClubImage } from "@/components/ClubImage";
 import { Button } from "@/components/Button";
-import { getMember } from "@/lib/fixtures";
+import { getMember } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Garage" };
 

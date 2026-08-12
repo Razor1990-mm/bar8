@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ClubImage } from "@/components/ClubImage";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Stat } from "@/components/Stat";
-import { getMember, getMembers, getEvents } from "@/lib/fixtures";
+import { getMember, getMembers, getEvents } from "@/lib/data";
 
 export async function generateStaticParams() {
   const members = await getMembers();

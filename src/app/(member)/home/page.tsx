@@ -9,7 +9,7 @@ import {
   getNextEvent,
   getEventAttendees,
   getStories,
-} from "@/lib/fixtures";
+} from "@/lib/data";
 
 function greeting(): string {
   // Server-rendered in the club's home timezone; good enough for V1.

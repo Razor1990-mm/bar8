@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { EventCard } from "@/components/EventCard";
-import { getEvents } from "@/lib/fixtures";
+import { getEvents } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Events" };
 

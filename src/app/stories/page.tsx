@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PublicNav } from "@/components/PublicNav";
 import { ClubImage } from "@/components/ClubImage";
 import { StatLine } from "@/components/Stat";
-import { getStories } from "@/lib/fixtures";
+import { getStories } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Stories",

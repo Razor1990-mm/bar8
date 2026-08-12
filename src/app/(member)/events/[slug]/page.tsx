@@ -6,7 +6,7 @@ import { AvatarStack } from "@/components/AvatarStack";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Stat } from "@/components/Stat";
 import { ButtonLink } from "@/components/Button";
-import { getEvent, getEventAttendees, getEvents } from "@/lib/fixtures";
+import { getEvent, getEventAttendees, getEvents } from "@/lib/data";
 
 export async function generateStaticParams() {
   const events = await getEvents();
