@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BAR8
 
-## Getting Started
+The digital home of a private drivers club — a community built around great
+cars, great roads and the people behind the wheel.
 
-First, run the development server:
+Members discover events, see who's going, RSVP, and revisit past drives. The
+site's whole job is to answer one question — _what are we doing next?_ — and
+then get people off the screen and onto the road.
+
+**Full specification:** [`docs/BRIEF.md`](docs/BRIEF.md)
+
+## Stack
+
+| Concern                   | Choice                                         |
+| ------------------------- | ---------------------------------------------- |
+| Framework                 | Next.js 16 (App Router), React 19, TypeScript  |
+| Styling                   | Tailwind CSS v4 + CSS custom properties        |
+| Database / Auth / Storage | Supabase (Postgres + RLS, magic link)          |
+| Email                     | Resend                                         |
+| RSVP                      | Luma (behind a provider interface — swappable) |
+| Maps                      | Google Maps                                    |
+| Hosting                   | Vercel                                         |
+| Tests                     | Vitest (unit) + Playwright (mobile flows)      |
+
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env.local   # fill in Supabase / Resend / Maps keys
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then visit:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `/` — public homepage
+- `/styleguide` — the design system on one page (internal; removed before launch)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Design system
 
-## Learn More
+Dark-first, single restrained accent, hairline rules instead of cards.
+Everything is built from tokens in `src/app/globals.css` and primitives in
+`src/components/`.
 
-To learn more about Next.js, take a look at the following resources:
+**Type voices** — `type-display` (uppercase, tight tracking), `type-editorial`
+(65ch measure), `type-label` (small caps), `type-data` (tabular numerals).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Colors** — `ink` `charcoal` `slate` `hairline` `bone` `muted`, plus `signal`,
+a desaturated red used as a fill in exactly one place: the confirmed-RSVP
+state. If it starts appearing elsewhere, the system is drifting.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**No cards.** Event and member cards are hairline-above with air below, never
+boxes. This is what separates "private paddock" from "ticketing platform."
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev        # dev server
+npm run build      # production build
+npm test           # vitest
+npm run test:e2e   # playwright, iPhone 15 viewport
+npm run format     # prettier
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Conventions
+
+- Server Components by default; `"use client"` only where interaction requires it.
+- Zod schemas in `src/lib/schemas/` are shared between client and server.
+- No Audi- or R8-specific logic in the data model — the club has an R8 heritage,
+  the software supports any enthusiast vehicle.
+- Luma sits behind `src/lib/rsvp/` so it can be replaced by native RSVP without
+  touching the UI.
