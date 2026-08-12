@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ */
+/* BAR8 design tokens — dark-first, single accent, hairline discipline */
+/* ------------------------------------------------------------------ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #0a0a0b; /* page ground */
+  --charcoal: #17181a; /* raised surfaces */
+  --slate: #2a2c30; /* borders on surfaces */
+  --hairline: rgba(242, 240, 236, 0.14);
+  --bone: #f2f0ec; /* primary text */
+  --muted: #8a8c90; /* secondary text */
+  --signal: #c4453e; /* desaturated red — RSVP state + live badges ONLY */
+
+  --background: var(--ink);
+  --foreground: var(--bone);
 }
 
 @theme inline {
+  --color-ink: var(--ink);
+  --color-charcoal: var(--charcoal);
+  --color-slate: var(--slate);
+  --color-hairline: var(--hairline);
+  --color-bone: var(--bone);
+  --color-muted: var(--muted);
+  --color-signal: var(--signal);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-sans-var);
+  --font-display: var(--font-sans-var);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans-var), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Type voices ------------------------------------------------------- */
+
+.type-display {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+.type-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.type-data {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.type-editorial {
+  line-height: 1.65;
+  max-width: 65ch;
+}
+
+/* Motion ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
