@@ -7,7 +7,7 @@ export type EventCardData = {
   title: string;
   dateLabel: string; // "OCT 10"
   category: string; // "DRIVE" | "TRACK" | ...
-  imageUrl: string;
+  imageUrl?: string | null;
   attending: number;
   capacity?: number | null;
   members?: AvatarStackMember[];
@@ -17,7 +17,10 @@ export type EventCardData = {
  *  social proof. Hairline above, air below — never a boxed card. */
 export function EventCard({ event }: { event: EventCardData }) {
   return (
-    <Link href={`/events/${event.slug}`} className="group block border-t border-hairline pt-4">
+    <Link
+      href={`/events/${event.slug}`}
+      className="group block border-t border-hairline pt-4"
+    >
       <ClubImage
         src={event.imageUrl}
         alt={event.title}
@@ -35,7 +38,9 @@ export function EventCard({ event }: { event: EventCardData }) {
           <span />
         )}
         <span className="type-data text-sm text-muted">
-          {event.capacity ? `${event.attending} / ${event.capacity}` : `${event.attending} going`}
+          {event.capacity
+            ? `${event.attending} / ${event.capacity}`
+            : `${event.attending} going`}
         </span>
       </div>
     </Link>

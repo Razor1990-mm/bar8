@@ -1,11 +1,13 @@
 import Link from "next/link";
+import { PublicNav } from "@/components/PublicNav";
 
 /** Public homepage — intrigue over explanation. Full-screen hero,
  *  two CTAs, nothing else above the fold. Imagery lands in Phase 2;
  *  the charcoal gradient placeholder holds the same slot. */
 export default function Home() {
   return (
-    <main className="flex-1">
+    <main className="relative flex-1">
+      <PublicNav />
       <section className="relative flex min-h-svh flex-col justify-end bg-gradient-to-b from-charcoal via-ink to-ink px-6 pb-16 md:px-12 md:pb-24">
         <p className="type-label mb-6 reveal">BAR8 · Private Drivers Club</p>
         <h1 className="type-display reveal text-5xl md:text-8xl max-w-4xl">
