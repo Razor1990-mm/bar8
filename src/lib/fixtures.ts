@@ -4,7 +4,61 @@
  *  never the arrays directly — so switching to Supabase means reimplementing
  *  four functions and deleting the data, with no page changes.
  *
- *  All people here are fictional. Real member details never live in this repo. */
+ *  Members are real (founder-approved for this public repo): names, cities and
+ *  cars only. Never add phone numbers, emails, or social handles here. */
+
+export type Member = {
+  id: string;
+  slug: string;
+  firstName: string;
+  lastName: string;
+  name: string;
+  city: string | null;
+  role: string | null;
+  memberSince: string;
+  bio: string | null;
+  avatarUrl?: string | null;
+  cars: Car[];
+};
+
+export type Car = {
+  id: string;
+  year: number | null;
+  make: string;
+  model: string;
+  trim: string | null;
+  exteriorColor: string | null;
+  isPrimary: boolean;
+  ownership: "current" | "former";
+  /** "2017 Audi R8 V10+" — the display line used everywhere */
+  label: string;
+};
+
+export type ScheduleItem = { time: string; label: string };
+
+export type ClubEvent = {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  category: "drive" | "track" | "social" | "dinner" | "trip" | "access";
+  dateLabel: string; // "Saturday, September 12"
+  shortDateLabel: string; // "SEP 12"
+  meetTime: string | null;
+  departTime: string | null;
+  startLocation: string | null;
+  routeSummary: string | null;
+  distanceMiles: number | null;
+  estDriveMinutes: number | null;
+  capacity: number | null;
+  lumaUrl: string | null;
+  whatsappUrl: string | null;
+  schedule: ScheduleItem[];
+  /** memberId → carId being brought (null = not yet chosen) */
+  attendance: { memberId: string; carId: string | null }[];
+  isPast: boolean;
+  heroUrl?: string | null;
+};
 
 export type StorySummary = {
   slug: string;
@@ -22,6 +76,8 @@ export type Story = StorySummary & {
   routeLabel?: string;
 };
 
+/* SAMPLE CONTENT: these three recaps are invented events written in the
+ * intended editorial voice. Replace with real club history. */
 const stories: Story[] = [
   {
     slug: "napa-run",
@@ -89,7 +145,144 @@ const stories: Story[] = [
   },
 ];
 
+/* -- Members (real; details pending for Ken and Mike) ------------------- */
+
+const members: Member[] = [
+  {
+    id: "m-raza",
+    slug: "raza",
+    firstName: "Raza",
+    lastName: "Rafiq",
+    name: "Raza Rafiq",
+    city: "Mountain View",
+    role: "Founder",
+    memberSince: "2026",
+    bio: null,
+    cars: [
+      {
+        id: "c-raza-r8",
+        year: 2017,
+        make: "Audi",
+        model: "R8",
+        trim: "V10 Plus",
+        exteriorColor: "Matte Camo Green",
+        isPrimary: true,
+        ownership: "current",
+        label: "2017 Audi R8 V10+",
+      },
+      {
+        id: "c-raza-911",
+        year: 2009,
+        make: "Porsche",
+        model: "911",
+        trim: null,
+        exteriorColor: null,
+        isPrimary: false,
+        ownership: "current",
+        label: "2009 Porsche 911",
+      },
+    ],
+  },
+  {
+    id: "m-ken",
+    slug: "ken",
+    firstName: "Ken",
+    lastName: "Toy",
+    name: "Ken Toy",
+    city: null, // pending
+    role: null,
+    memberSince: "2026",
+    bio: null,
+    cars: [], // pending — car details from Ken
+  },
+  {
+    id: "m-mike",
+    slug: "mike",
+    firstName: "Mike",
+    lastName: "Hong",
+    name: "Mike Hong",
+    city: null, // pending
+    role: null,
+    memberSince: "2026",
+    bio: null,
+    cars: [], // pending — car details from Mike
+  },
+];
+
+/* -- Events -------------------------------------------------------------
+ * One realistic upcoming drive so every member surface has something to
+ * render. Replace with the club's real calendar; date is deliberately
+ * near-term relative to the Ken demo. */
+
+const events: ClubEvent[] = [
+  {
+    id: "e-skyline",
+    slug: "skyline-half-moon-bay",
+    title: "Skyline → Alice's → Half Moon Bay",
+    subtitle: "The classic loop, before the fog burns off.",
+    category: "drive",
+    dateLabel: "Saturday, September 12",
+    shortDateLabel: "SEP 12",
+    meetTime: "6:45 AM",
+    departTime: "7:00 AM",
+    startLocation: "Alice's Restaurant, Woodside",
+    routeSummary: "Woodside → Skyline Blvd → Alice's → HWY 84 → Half Moon Bay",
+    distanceMiles: 74,
+    estDriveMinutes: 150,
+    capacity: 25,
+    lumaUrl: null, // pending — real Luma event
+    whatsappUrl: null, // pending — group invite link
+    schedule: [
+      { time: "6:45 AM", label: "Meet" },
+      { time: "7:00 AM", label: "Depart" },
+      { time: "8:30 AM", label: "Coffee at Alice's" },
+      { time: "9:15 AM", label: "Down 84 to the coast" },
+      { time: "10:00 AM", label: "Breakfast, Half Moon Bay" },
+    ],
+    attendance: [
+      { memberId: "m-raza", carId: "c-raza-r8" },
+      { memberId: "m-ken", carId: null },
+      { memberId: "m-mike", carId: null },
+    ],
+    isPast: false,
+  },
+];
+
 /* -- Accessors. Swap these bodies for Supabase queries; pages stay put. -- */
+
+export async function getMembers(): Promise<Member[]> {
+  return members;
+}
+
+export async function getMember(slug: string): Promise<Member | null> {
+  return members.find((m) => m.slug === slug) ?? null;
+}
+
+export async function getEvents(): Promise<ClubEvent[]> {
+  return events;
+}
+
+export async function getEvent(slug: string): Promise<ClubEvent | null> {
+  return events.find((e) => e.slug === slug) ?? null;
+}
+
+export async function getNextEvent(): Promise<ClubEvent | null> {
+  return events.find((e) => !e.isPast) ?? null;
+}
+
+/** Resolve an event's attendance into member + chosen-car pairs. */
+export async function getEventAttendees(
+  event: ClubEvent,
+): Promise<{ member: Member; car: Car | null }[]> {
+  return event.attendance
+    .map((a) => {
+      const member = members.find((m) => m.id === a.memberId);
+      if (!member) return null;
+      const car = member.cars.find((c) => c.id === a.carId) ?? null;
+      return { member, car };
+    })
+    .filter((x): x is { member: Member; car: Car | null } => x !== null);
+}
 
 export async function getStories(): Promise<StorySummary[]> {
   return stories;
