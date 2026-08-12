@@ -390,7 +390,7 @@ Compile everything into a single report.
 - **Does not review code quality** — that's `/review` and `/pr`
 - **Does not run the review-fix loop** — that's `/pr`
 - **Does not check mid-sprint status** — that's `/sprint-review`
-- **Does not audit security/tenancy** — that's `/audit` and `/check-tenancy`
+- **Does not audit security/RLS scoping** — that's `/audit` and `/security`
 
 This skill answers ONE question: **"Do all the pieces fit together, and is this branch ready to become main?"**
 
