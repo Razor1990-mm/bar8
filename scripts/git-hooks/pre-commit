@@ -1,0 +1,16 @@
+#!/bin/bash
+# Pre-commit gate: lint + typecheck + unit tests. Budget: ~15s.
+# Installed into .git/hooks/pre-commit via `npm run prepare`.
+
+set -e
+
+echo "[pre-commit] lint..."
+npm run lint
+
+echo "[pre-commit] typecheck..."
+npx tsc --noEmit
+
+echo "[pre-commit] unit tests..."
+npm test
+
+echo "[pre-commit] OK"

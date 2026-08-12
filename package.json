@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "cp scripts/git-hooks/* .git/hooks/ && chmod +x .git/hooks/pre-commit .git/hooks/pre-push"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.7.1",

@@ -1,0 +1,10 @@
+#!/bin/bash
+# Pre-push gate: production build.
+# Installed into .git/hooks/pre-push via `npm run prepare`.
+
+set -e
+
+echo "[pre-push] build..."
+npm run build
+
+echo "[pre-push] OK"
