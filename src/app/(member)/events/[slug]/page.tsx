@@ -6,7 +6,9 @@ import { AvatarStack } from "@/components/AvatarStack";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Stat } from "@/components/Stat";
 import { ButtonLink } from "@/components/Button";
-import { getEvent, getEventAttendees, getEvents } from "@/lib/data";
+import { RsvpControl } from "@/components/RsvpControl";
+import { getEvent, getEventAttendees, getEvents, buildCarLabel } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 
 export async function generateStaticParams() {
   const events = await getEvents();
@@ -33,6 +35,46 @@ export default async function EventPage({
 
   const attendees = await getEventAttendees(event);
   const carsComing = attendees.filter((a) => a.car);
+
+  // Viewer's own attendance + cars, for the native in-app RSVP control.
+  // Server-side only — never trust a client-supplied car/attendance state.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let viewerIsAttending = false;
+  let viewerCarId: string | null = null;
+  let viewerCars: { id: string; label: string }[] = [];
+
+  if (user) {
+    const [{ data: attendanceRow }, { data: carRows }] = await Promise.all([
+      supabase
+        .from("event_attendance")
+        .select("car_id, status")
+        .eq("event_id", event.id)
+        .eq("profile_id", user.id)
+        .maybeSingle(),
+      supabase
+        .from("cars")
+        .select("id, year, make, model, trim")
+        .eq("profile_id", user.id)
+        .order("sort_order", { ascending: true })
+        .limit(50),
+    ]);
+
+    viewerIsAttending = attendanceRow?.status === "going";
+    viewerCarId = viewerIsAttending ? (attendanceRow?.car_id ?? null) : null;
+    viewerCars = (carRows ?? []).map((c) => ({
+      id: c.id as string,
+      label: buildCarLabel(
+        c.year as number | null,
+        c.make as string,
+        c.model as string,
+        c.trim as string | null,
+      ),
+    }));
+  }
 
   // Cars Attending breakdown — grouped by make, "Other" folds the tail.
   const byMake = new Map<string, number>();
@@ -102,7 +144,16 @@ export default async function EventPage({
                 RSVP
               </ButtonLink>
             ) : (
-              <span className="type-label">RSVP opens soon</span>
+              <RsvpControl
+                eventId={event.id}
+                slug={event.slug}
+                authenticated={Boolean(user)}
+                capacity={event.capacity}
+                attendeeCount={attendees.length}
+                isAttending={viewerIsAttending}
+                carId={viewerCarId}
+                cars={viewerCars}
+              />
             )}
             {event.whatsappUrl && (
               <ButtonLink

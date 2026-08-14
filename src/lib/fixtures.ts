@@ -53,6 +53,7 @@ export type ClubEvent = {
   capacity: number | null;
   lumaUrl: string | null;
   whatsappUrl: string | null;
+  attendanceSource: "luma" | "native";
   schedule: ScheduleItem[];
   /** memberId → carId being brought (null = not yet chosen) */
   attendance: { memberId: string; carId: string | null }[];
@@ -81,6 +82,7 @@ export type Story = StorySummary & {
 const stories: Story[] = [
   {
     slug: "napa-run",
+    heroUrl: "/imagery/story-napa.jpg",
     title: "Napa Run",
     dateLabel: "October 10, 2026",
     dek: "21 cars. 146 miles. One very long lunch.",
@@ -103,6 +105,7 @@ const stories: Story[] = [
   },
   {
     slug: "skyline-morning-run",
+    heroUrl: "/imagery/story-skyline.jpg",
     title: "Skyline Morning Run",
     dateLabel: "September 12, 2026",
     dek: "18 cars. 74 miles. Home before most people were up.",
@@ -124,6 +127,7 @@ const stories: Story[] = [
   },
   {
     slug: "laguna-seca",
+    heroUrl: "/imagery/story-laguna.jpg",
     title: "Laguna Seca",
     dateLabel: "August 22, 2026",
     dek: "14 cars, one corkscrew, zero incidents.",
@@ -218,6 +222,7 @@ const events: ClubEvent[] = [
   {
     id: "e-skyline",
     slug: "skyline-half-moon-bay",
+    heroUrl: "/imagery/story-skyline.jpg",
     title: "Skyline → Alice's → Half Moon Bay",
     subtitle: "The classic loop, before the fog burns off.",
     category: "drive",
@@ -232,6 +237,7 @@ const events: ClubEvent[] = [
     capacity: 25,
     lumaUrl: null, // pending — real Luma event
     whatsappUrl: null, // pending — group invite link
+    attendanceSource: "native",
     schedule: [
       { time: "6:45 AM", label: "Meet" },
       { time: "7:00 AM", label: "Depart" },

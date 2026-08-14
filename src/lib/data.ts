@@ -13,6 +13,7 @@
  */
 
 import { createClient, supabaseConfigured } from "./supabase/server";
+import { eventHero, storyHero } from "./imagery";
 import * as fixtures from "./fixtures";
 import type { Member, Car, ScheduleItem, ClubEvent, StorySummary, Story } from "./fixtures";
 
@@ -170,7 +171,7 @@ const CAR_COLUMNS =
 const EVENT_COLUMNS =
   "id, slug, title, subtitle, category, starts_at, timezone, meet_time, depart_time, " +
   "start_location_label, route_summary, distance_miles, est_drive_minutes, capacity, " +
-  "luma_event_url, whatsapp_chat_url, hero_photo_path, status";
+  "luma_event_url, whatsapp_chat_url, hero_photo_path, status, attendance_source";
 
 type ProfileRowWithAvatar = ProfileRow & { avatar_path: string | null };
 
@@ -210,6 +211,7 @@ type EventRow = {
   whatsapp_chat_url: string | null;
   hero_photo_path: string | null;
   status: string;
+  attendance_source: "luma" | "native";
 };
 
 type ScheduleRow = { event_id: string; time_label: string; label: string; sort_order: number };
@@ -252,10 +254,12 @@ async function mapEventRow(
     capacity: row.capacity,
     lumaUrl: row.luma_event_url,
     whatsappUrl: row.whatsapp_chat_url,
+    attendanceSource: row.attendance_source,
     schedule,
     attendance,
     isPast: computeIsPast(row.starts_at),
-    heroUrl,
+    // Real photography (Storage) wins; stock imagery fills empty slots.
+    heroUrl: heroUrl ?? eventHero(row.slug, row.category),
   };
 }
 
@@ -495,7 +499,7 @@ async function mapStoryRow(supabase: SupabaseServerClient, row: StoryRow): Promi
     dateLabel: dateSourceIso ? formatStoryDateLabel(dateSourceIso) : "",
     dek: row.dek ?? "",
     stats: [],
-    heroUrl,
+    heroUrl: heroUrl ?? storyHero(row.slug),
     body: row.body ? row.body.split(/\n\n+/) : [],
     attendeeCount,
     carBreakdown,

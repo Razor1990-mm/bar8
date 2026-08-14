@@ -47,7 +47,9 @@ export class LumaProvider implements RsvpProvider {
 
 export class NativeProvider implements RsvpProvider {
   getRsvpUrl(_event: RsvpEvent): string | null {
-    throw new Error("NativeProvider is not implemented in V1");
+    // Native RSVP is in-app (RsvpControl + event_attendance) — there is no
+    // external URL to send the member to.
+    return null;
   }
 
   async syncAttendance(_event: RsvpEvent): Promise<void> {
