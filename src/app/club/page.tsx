@@ -26,6 +26,8 @@ export default function ClubPage() {
       </section>
 
       <ClubImage
+        src="/imagery/club.jpg"
+        sizes="100vw"
         alt="Members gathered at an early morning meet"
         className="aspect-[4/5] w-full md:aspect-[21/9]"
       />

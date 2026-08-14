@@ -66,20 +66,6 @@ export default async function StoryPage({
         </div>
       </section>
 
-      {/* Editorial photo grid — varied aspects, full-bleed break */}
-      <section className="grid grid-cols-2 gap-2 px-2 pb-16 md:grid-cols-3 md:gap-3 md:px-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <ClubImage
-            key={i}
-            alt={`${story.title} photograph ${i + 1}`}
-            className={
-              i === 0
-                ? "col-span-2 aspect-[3/2] md:col-span-2 md:row-span-2 md:aspect-auto"
-                : "aspect-square"
-            }
-          />
-        ))}
-      </section>
 
       <section className="mx-auto max-w-[1120px] px-6 pb-16 md:px-12">
         <SectionHeader kicker="Cars that came" className="mb-10" />

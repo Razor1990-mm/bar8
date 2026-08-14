@@ -15,30 +15,35 @@ export const metadata: Metadata = {
 const experiences = [
   {
     key: "drive",
+    image: "/imagery/experience-drive.jpg",
     name: "Morning Drives",
     line: "Great roads, early starts, breakfast afterward.",
     body: "Out before the traffic, back before the day begins. Skyline, Alice's, the coast — the roads are the reason, the table afterward is why people stay.",
   },
   {
     key: "track",
+    image: "/imagery/experience-track.jpg",
     name: "Track",
     line: "Track days, driving experiences and motorsport.",
     body: "Laguna Seca, Thunderhill, Sonoma. Instruction for anyone who wants it, no pressure on anyone who doesn't. Bring the car you actually want to drive.",
   },
   {
     key: "dinner",
+    image: "/imagery/experience-dinner.jpg",
     name: "Tables",
     line: "Small dinners and gatherings.",
     body: "Ten or twelve people, one long table, no agenda. The part of the club that has nothing to do with cars and somehow matters most.",
   },
   {
     key: "trip",
+    image: "/imagery/experience-trip.jpg",
     name: "Weekends",
     line: "Napa, Tahoe, Los Angeles, Monterey, Vegas.",
     body: "Two or three days, a real route, somewhere worth arriving at. Car Week, wine country, the desert in winter.",
   },
   {
     key: "access",
+    image: "/imagery/experience-access.jpg",
     name: "Access",
     line: "Garages, collections, launches.",
     body: "Private collections that are not open to the public, workshops mid-restoration, the occasional launch. Doors that open because someone in the group knows someone.",
@@ -60,6 +65,8 @@ export default function ExperiencesPage() {
       {experiences.map((x, i) => (
         <article key={x.key} className="mb-16 md:mb-24">
           <ClubImage
+            src={x.image}
+            sizes="100vw"
             alt={x.name}
             className="aspect-[4/3] w-full md:aspect-[21/9]"
           />
