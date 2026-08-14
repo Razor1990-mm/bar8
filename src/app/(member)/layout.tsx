@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { MemberTabBar } from "@/components/MemberTabBar";
+import { AvatarMenu } from "@/components/AvatarMenu";
+import { getViewer } from "@/lib/viewer";
+import { getInitials } from "@/lib/initials";
 
 const desktopLinks = [
   { href: "/home", label: "Home" },
@@ -12,11 +15,13 @@ const desktopLinks = [
 /** Authenticated shell: top wordmark bar on all sizes, bottom tab bar on
  *  mobile, inline links on desktop. Auth gating arrives with Supabase in
  *  middleware.ts — until then this shell renders for everyone (fixtures). */
-export default function MemberLayout({
+export default async function MemberLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const viewer = await getViewer();
+
   return (
     <div className="flex min-h-svh flex-col">
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-hairline bg-ink/95 px-6 py-4 backdrop-blur md:px-12">
@@ -34,14 +39,13 @@ export default function MemberLayout({
             </Link>
           ))}
         </nav>
-        {/* Avatar menu placeholder — becomes a sheet with My Profile /
-            Settings / Sign Out once auth lands */}
-        <Link
-          href="/members/raza"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-charcoal text-sm text-muted"
-        >
-          R
-        </Link>
+        {viewer && (
+          <AvatarMenu
+            initials={getInitials(viewer.first_name, viewer.last_name)}
+            slug={viewer.slug}
+            isAdmin={viewer.is_admin}
+          />
+        )}
       </header>
       {/* pb clears the fixed mobile tab bar */}
       <div className="flex-1 pb-20 md:pb-0">{children}</div>

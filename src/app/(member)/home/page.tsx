@@ -10,6 +10,7 @@ import {
   getEventAttendees,
   getStories,
 } from "@/lib/data";
+import { getViewer } from "@/lib/viewer";
 
 function greeting(): string {
   // Server-rendered in the club's home timezone; good enough for V1.
@@ -26,9 +27,9 @@ function greeting(): string {
 }
 
 /** The member dashboard. Answers, in order: what's next, who's going,
- *  what else is coming, what did I miss. Hardcoded viewer = Raza until
- *  auth lands. */
+ *  what else is coming, what did I miss. */
 export default async function HomePage() {
+  const viewer = await getViewer();
   const next = await getNextEvent();
   const events = await getEvents();
   const stories = await getStories();
@@ -36,8 +37,8 @@ export default async function HomePage() {
   const upcoming = events.filter((e) => !e.isPast && e.slug !== next?.slug);
   const lastStory = stories[0];
 
-  const viewerName = "Raza"; // TODO(auth): from session profile
-  const isGoing = attendees.some((a) => a.member.slug === "raza");
+  const viewerName = viewer?.first_name ?? "there";
+  const isGoing = attendees.some((a) => a.member.slug === viewer?.slug);
   const spotsLeft = next?.capacity ? next.capacity - attendees.length : null;
 
   return (
